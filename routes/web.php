@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\EmpleadosController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,7 +19,13 @@ Route::get('/', function () {
 });
 
 // *********** Creación de rutas ************
+Route::get('saludo', [EmpleadosController::class,'saludo']); // La ruta apunta a la función 'saludo' del controlador Empleados
 
+// Ruta con parámetro
+Route::get("nomina/{param1}/{param2}", [EmpleadosController::class, 'nomina']);
+
+/*
+// Las rutas no deberian crearse de la siguiente forma, solo llamadas a métodos de controladores
 // Ruta normal - Imprime texto
 Route::get('/ruta1', function(){
     return "Soy la ruta 1!";
@@ -76,3 +83,4 @@ Route::get("/redireccion4/{base}/{altura?}", function($base, $altura = 0){
 
 // Redirección a una página externa
 Route::redirect("/redireccion5", "https://github.com/iJCode1");
+*/
