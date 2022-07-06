@@ -24,6 +24,12 @@ Route::get('saludo', [EmpleadosController::class,'saludo']); // La ruta apunta a
 // Ruta con parámetro
 Route::get("nomina/{param1}/{param2}", [EmpleadosController::class, 'nomina']);
 
+// Ruta que llama al método que retorna una vista
+Route::get("nomina1/{nombre}/{diast}", [EmpleadosController::class, 'nomina1']);
+
+Route::get('nomina2/{nombre}/{diast}', [EmpleadosController::class, 'nomina2']);
+Route::get("salir", [EmpleadosController::class, 'salir'])->name('salir');
+
 /*
 // Las rutas no deberian crearse de la siguiente forma, solo llamadas a métodos de controladores
 // Ruta normal - Imprime texto
