@@ -60,4 +60,12 @@ class EmpleadosController extends Controller
     public function bootstrap(){
         return view('bootstrap');
     }
+
+    // Método para las 2 vistas que usan la plantilla
+    public function view1(){
+        return view('view1');
+    }
+    public function view2(){
+        return view('view2');
+    }
 }

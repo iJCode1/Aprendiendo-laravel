@@ -32,6 +32,9 @@ Route::get("salir", [EmpleadosController::class, 'salir'])->name('salir');
 
 Route::get('boots', [EmpleadosController::class, 'bootstrap']);
 
+Route::get('vista1', [EmpleadosController::class, 'view1'])->name("viewe1");
+Route::get('vista2', [EmpleadosController::class, 'view2'])->name('viewe2');
+
 
 /*
 // Las rutas no deberian crearse de la siguiente forma, solo llamadas a métodos de controladores
