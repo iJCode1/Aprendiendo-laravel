@@ -1,0 +1,19 @@
+:root{
+  --headline: #2b2c34;
+  --purple: #6246ea;
+  --white: #fffffe;
+  --gray: #d1d1e9;
+  --red: #e45858;
+}
+
+body{
+  margin: 0;
+}
+
+.header-title{
+  color: var(--purple);
+}
+
+.header-paragraph{
+  color: var(--red);
+}

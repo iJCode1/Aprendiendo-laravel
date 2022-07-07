@@ -30,6 +30,9 @@ Route::get("nomina1/{nombre}/{diast}", [EmpleadosController::class, 'nomina1']);
 Route::get('nomina2/{nombre}/{diast}', [EmpleadosController::class, 'nomina2']);
 Route::get("salir", [EmpleadosController::class, 'salir'])->name('salir');
 
+Route::get('boots', [EmpleadosController::class, 'bootstrap']);
+
+
 /*
 // Las rutas no deberian crearse de la siguiente forma, solo llamadas a métodos de controladores
 // Ruta normal - Imprime texto

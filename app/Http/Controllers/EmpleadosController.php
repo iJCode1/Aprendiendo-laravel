@@ -55,4 +55,9 @@ class EmpleadosController extends Controller
     public function salir(){
         return "Salir";
     }
+
+    // Método para vista 'bootstrap'
+    public function bootstrap(){
+        return view('bootstrap');
+    }
 }
