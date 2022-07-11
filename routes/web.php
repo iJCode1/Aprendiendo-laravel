@@ -32,8 +32,8 @@ Route::get("salir", [EmpleadosController::class, 'salir'])->name('salir');
 
 Route::get('boots', [EmpleadosController::class, 'bootstrap']);
 
-Route::get('vista1', [EmpleadosController::class, 'view1'])->name("viewe1");
-Route::get('vista2', [EmpleadosController::class, 'view2'])->name('viewe2');
+Route::get('altaempleado', [EmpleadosController::class, 'altaempleado'])->name("altaempleado");
+Route::post('guardarempleado', [EmpleadosController::class, 'guardarempleado'])->name('guardarempleado');
 
 
 /*

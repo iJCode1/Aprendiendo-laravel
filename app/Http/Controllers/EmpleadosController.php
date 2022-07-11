@@ -62,10 +62,21 @@ class EmpleadosController extends Controller
     }
 
     // Método para las 2 vistas que usan la plantilla
-    public function view1(){
-        return view('view1');
+    public function altaempleado(){
+        return view('altaempleado');
     }
-    public function view2(){
-        return view('view2');
+    public function guardarempleado(Request $request){
+        $nombre = $request->nombre;
+        $sexo = $request->sexo;
+
+        if($sexo === 'M'){
+            echo("Bienvenido al sitio $nombre!");
+        }else{
+            echo("Bienvenida al sitio $nombre!");
+        }
+
+        // dd($request);
+        // return $request;
+        // return view('view2');
     }
 }
