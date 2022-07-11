@@ -69,6 +69,17 @@ class EmpleadosController extends Controller
         $nombre = $request->nombre;
         $sexo = $request->sexo;
 
+        // Las validaciones se hacen de izquierda a derecha
+        $this->validate($request, [
+            'ide' => 'required|numeric',
+            'nombre' => 'required|alpha',
+            'apellido' => 'required|alpha',
+            'email' => 'required|email',
+            'celular' => 'required|integer',
+        ]);
+        // Si alguna validación manda un error, ya no se ejecuta lo demas. Se queda a la espera a que se corrija todo
+        echo("Las validaciones fueron correctas! ");
+
         if($sexo === 'M'){
             echo("Bienvenido al sitio $nombre!");
         }else{
