@@ -71,11 +71,13 @@ class EmpleadosController extends Controller
 
         // Las validaciones se hacen de izquierda a derecha
         $this->validate($request, [
-            'ide' => 'required|numeric',
-            'nombre' => 'required|alpha',
-            'apellido' => 'required|alpha',
+            // 'ide' => 'required|numeric',
+            'ide' => 'required|regex: /^[E][M][P]-[0-9]{5}$/',
+            'nombre' => 'required|regex: /^[A-Z][A-Z,a-z,\s, á, é, í, ó, ú, ü]+$/',
+            'apellido' => 'required|regex: /^[A-Z][A-Z, a-z, \s, á, é, í, ó, ú, ü]+$/',
+            // 'precio' => 'required|regex: /^[0-9]+[.][0-9]{2}$/',
             'email' => 'required|email',
-            'celular' => 'required|integer',
+            'celular' => 'required|regex: /^[0-9]{10}$/',
         ]);
         // Si alguna validación manda un error, ya no se ejecuta lo demas. Se queda a la espera a que se corrija todo
         echo("Las validaciones fueron correctas! ");
