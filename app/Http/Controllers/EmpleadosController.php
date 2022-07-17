@@ -138,8 +138,39 @@ class EmpleadosController extends Controller
         $empleados->delete();*/
 
         // Eliminar uno o más registros que cumplan una o más condiciones
-        $empleados = empleados::where('sexo', 'F')
+        /*$empleados = empleados::where('sexo', 'F')
         ->where("idd", 1)
-        ->delete();
+        ->delete();*/
+
+        // SoftDeletes
+        /*$empleados = empleados::find(1);
+        $empleados->delete();
+        return "Eliminacion exitosa!";*/
+
+        // Consultar los registros que no tienen baja lógica
+        /*$empleados = empleados::all();
+        return $empleados;*/
+
+        // Consultar los registros tanto con baja lógica y sin baja lógica (todos)
+        /*$empleados = empleados::withTrashed()->get();
+        return $empleados;*/
+
+        // Consultar únicamente los registros con baja lógica
+        /*$empleados = empleados::onlyTrashed()->get();
+        return $empleados;*/
+
+        // Consultar registros que tienen baja lógica pero que cumplan con una o más condiciones establecidas
+        /*$empleados = empleados::onlyTrashed()
+                     ->where('sexo', 'M')
+                     ->get();
+        return $empleados;*/
+
+        /*$empleados = empleados::withTrashed()
+                     ->where('ide', 1)
+                     ->restore();
+        return "Empleado restaurado!";*/
+
+        empleados::find(1)->forceDelete();
+        return "Empleado eliminado forzadamente!";
     }
 }
