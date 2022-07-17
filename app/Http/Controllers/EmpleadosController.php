@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\empleados;
 
 class EmpleadosController extends Controller
 {
@@ -65,6 +66,7 @@ class EmpleadosController extends Controller
     public function altaempleado(){
         return view('altaempleado');
     }
+
     public function guardarempleado(Request $request){
         $nombre = $request->nombre;
         $sexo = $request->sexo;
@@ -91,5 +93,53 @@ class EmpleadosController extends Controller
         // dd($request);
         // return $request;
         // return view('view2');
+    }
+
+    public function eloquent(){
+        // Consulta basica
+        // $consulta = empleados::all();
+        // return $consulta;
+
+        // Inserción básica: Forma 1
+        /*$empleados = new empleados;
+        $empleados->ide = 5;
+        $empleados->nombre = 'Samuel';
+        $empleados->apellido = 'Cortez';
+        $empleados->email = 'samu@samu.com';
+        $empleados->celular = "7228763451";
+        $empleados->sexo = 'M';
+        $empleados->descripcion = 'Es un empleado responsable';
+        $empleados->idd = 2;
+        $empleados->save();*/
+
+        // Inserción básica: Forma 2
+        /*$empleados = empleados::create(
+            ['ide' => 6, 'nombre' => "Paty", 'apellido' => "Gutierrez", 'email' => 'paty7@paty.com', 'celular' => '7228945623', 'sexo' => 'F', 'descripcion' => "Le gusta leer", 'idd' => 1],
+        );*/
+
+        // Modificación de un registro a partir de su identificador 'ide'
+        /*$empleados = empleados::find(2);
+        $empleados->nombre = "SamuelEditado";
+        $empleados->apellido = "MontielEditado";
+        $empleados->save();*/
+
+        // Modificación a partir de una o más condiciones (where)
+        /*empleados::where('sexo', 'M')
+        ->where('idd', '1')
+        ->update(['nombre' => 'NombreDeHombre', 'celular' => "2227775555"]);*/
+        
+        // return 'Modificación realizada';
+
+        // Eliminar un registro a partir de su llave primaria
+        // empleados::destroy(2);
+
+        // Eliminar un registro a partir de una busqueda por su 'ide'
+        /*$empleados = empleados::find(3);
+        $empleados->delete();*/
+
+        // Eliminar uno o más registros que cumplan una o más condiciones
+        $empleados = empleados::where('sexo', 'F')
+        ->where("idd", 1)
+        ->delete();
     }
 }

@@ -21,6 +21,7 @@ class Empleados extends Migration
             $table->string('email', 40);
             $table->string('celular', 10);
             $table->string('sexo', 1);
+            $table->string('descripcion', 100);
 
             //Creación de la llave foranea
             $table->integer('idd')->unsigned();
