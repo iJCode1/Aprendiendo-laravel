@@ -38,6 +38,9 @@ Route::post('guardarempleado', [EmpleadosController::class, 'guardarempleado'])-
 // Eloquent
 Route::get("eloquent", [EmpleadosController::class, 'eloquent'])->name('eloquent');
 
+// Tabla de empleados
+Route::get("reporteempleados", [EmpleadosController::class, 'reporteempleados'])->name('reporteempleados');
+
 /*
 // Las rutas no deberian crearse de la siguiente forma, solo llamadas a métodos de controladores
 // Ruta normal - Imprime texto

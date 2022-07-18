@@ -282,4 +282,15 @@ class EmpleadosController extends Controller
 
         return $consulta;
     }
+
+    public function reporteempleados(){
+        
+        $empleados = empleados::join("departamentos", "empleados.idd", "=", "departamentos.idd")
+                               ->select("empleados.ide", "empleados.nombre", "empleados.apellido", "empleados.email", "departamentos.nombre AS depa")
+                               ->orderBy("empleados.nombre")
+                               ->get();
+        // return $consulta;
+        return view('reporteempleados')
+               ->with("empleados", $empleados);
+    }
 }
