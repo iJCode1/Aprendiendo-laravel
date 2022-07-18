@@ -41,6 +41,15 @@ Route::get("eloquent", [EmpleadosController::class, 'eloquent'])->name('eloquent
 // Tabla de empleados
 Route::get("reporteempleados", [EmpleadosController::class, 'reporteempleados'])->name('reporteempleados');
 
+// Desactivar empleados
+Route::get('desactivarempleado/{ide}', [EmpleadosController::class, 'desactivarempleado'])->name("desactivarempleado");
+
+// Activar empleados
+Route::get('activarempleado/{ide}', [EmpleadosController::class, 'activarempleado'])->name('activarempleado');
+
+// Borrar (forzado) empleados
+Route::get('borrarempleado/{ide}', [EmpleadosController::class, 'borrarempleado'])->name('borrarempleado');
+
 /*
 // Las rutas no deberian crearse de la siguiente forma, solo llamadas a métodos de controladores
 // Ruta normal - Imprime texto

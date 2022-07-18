@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\empleados;
 use App\Models\departamentos;
+use App\Models\nomina;
 
 class EmpleadosController extends Controller
 {
@@ -78,7 +79,8 @@ class EmpleadosController extends Controller
         $departamentos = departamentos::orderBy('nombre')->get();
         return view('altaempleado')
                ->with("ideSiguiente", $ideSiguiente)
-               ->with('departamentos', $departamentos);
+               ->with('departamentos', $departamentos)
+               ->with('error', 0);
         
         return $consulta;
     }
@@ -285,12 +287,57 @@ class EmpleadosController extends Controller
 
     public function reporteempleados(){
         
-        $empleados = empleados::join("departamentos", "empleados.idd", "=", "departamentos.idd")
-                               ->select("empleados.ide", "empleados.nombre", "empleados.apellido", "empleados.email", "departamentos.nombre AS depa")
+        $empleados = empleados::withTrashed()->join("departamentos", "empleados.idd", "=", "departamentos.idd")
+                               ->select("empleados.ide", "empleados.nombre", "empleados.apellido", "empleados.email", "departamentos.nombre AS depa", "empleados.deleted_at AS deleted")
                                ->orderBy("empleados.nombre")
                                ->get();
         // return $consulta;
         return view('reporteempleados')
-               ->with("empleados", $empleados);
+               ->with("empleados", $empleados)
+               ->with('error', 0);
+    }
+
+    // Baja lógica
+    public function desactivarempleado($ide){
+        empleados::find($ide)
+                   ->delete();
+        return view('mensajes')
+               ->with('proceso', "Desactivación de empleado")
+               ->with('mensaje', "El empleado ha sido desactivado correctamente")
+               ->with('error', 0);
+    }
+
+    public function activarempleado($ide){
+        empleados::withTrashed()->find($ide)->restore();
+        return view('mensajes')
+               ->with('proceso', "Activación de empleado")
+               ->with('mensaje', "El empleado ha sido activado correctamente")
+               ->with('error', 0);
+    }
+
+    // Baja física
+    public function borrarempleado($ide){
+
+        // Validar que ese 'empleado' no tenga transacciones en otras tablas
+        // En caso de tener, no se puede eliminar completamente
+        $consulta = nomina::where('ide', "=", $ide)
+                            ->get();
+        
+        $cuantos = count($consulta);
+
+        if($cuantos === 0){ // Si no tiene transacciones
+            empleados::withTrashed()->find($ide)->forceDelete();
+            return view('mensajes')
+                   ->with('proceso', "Borrado de empleado")
+                   ->with('mensaje', "El empleado ha sido borrado correctamente")
+                   ->with('error', 0);
+        }else{ // Si tiene transacciones
+            return view('mensajes')
+                ->with('proceso', "Borrado de empleado")
+                ->with('mensaje', "El empleado no se ha podido borrar ya que cuenta con transacciones en otras tablas")
+                ->with('error', 1);
+        }
+        
+        
     }
 }

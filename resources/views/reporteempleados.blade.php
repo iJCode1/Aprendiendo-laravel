@@ -24,7 +24,18 @@
       <td>{{$empleado->depa}}</td>
       <td>
       <button type="button" class="btn btn-warning">Modificar</button>
-      <button type="button" class="btn btn-danger">Eliminar</button>
+      @if($empleado->deleted != NULL)
+      <a href="{{Route('activarempleado', ['ide'=>$empleado->ide])}}">
+        <button type="button" class="btn btn-success">Activar</button>
+      </a>
+      <a href="{{Route('borrarempleado', ['ide'=>$empleado->ide])}}">
+        <button type="button" class="btn btn-secondary">Borrar</button>
+      </a>
+      @else
+      <a href="{{Route('desactivarempleado', ['ide'=>$empleado->ide])}}">
+        <button type="button" class="btn btn-danger">Desactivar</button>
+      </a>
+      @endif
       </td>
     </tr>
     @endforeach
