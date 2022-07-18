@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\empleados;
+use App\Models\departamentos;
 
 class EmpleadosController extends Controller
 {
@@ -170,7 +171,87 @@ class EmpleadosController extends Controller
                      ->restore();
         return "Empleado restaurado!";*/
 
-        empleados::find(1)->forceDelete();
-        return "Empleado eliminado forzadamente!";
+        // Forzar una eliminación (baja física)
+        /*empleados::find(1)->forceDelete();
+        return "Empleado eliminado forzadamente!";*/
+
+        /*empleados::create(
+            ['ide' => 6, 'nombre' => "Cristian", 'apellido' => "Gutierrez", 'email' => 'Cristian1@hotmail.com', 'celular' => '7228956473', 'sexo' => 'M', 'descripcion' => "Es muy estudioso", 'idd' => 2],
+        );
+        return "Inserción completa";*/
+
+        // Consultas
+
+        // Consulta todos los registros de la tabla
+        $consulta = empleados::all();
+
+        // Consulta con una condición (donde valor de sexo sea 'M')
+        $consulta = empleados::where('sexo', 'M')->get();
+
+        // Consulta con condición númerica dentro de un rango
+        // El anidamiento de 2 o más 'where' funciona como un 'AND'
+        $consulta = empleados::where('edad', '>=', 20)
+                               ->where('edad', '<=', 25)
+                               ->get();
+        // Forma 2
+        $consulta = empleados::whereBetween('edad', [20, 25])->get();
+
+        // Consulta con 'where' y 'orwhere' esté ultimo es como un 'OR'
+        $consulta = empleados::where('sexo', "F")
+                               ->orwhere('salario', '>=', 4500)
+                               ->get();
+
+        // Consultar los registrios que tengan una serie de valores posibles y se ordenan
+        $consulta = empleados::whereIn('ide', [2, 3, 4])
+                               ->orderBy('nombre')
+                               ->get();
+
+        // Hacer una consulta y solo obtener los primeros 'n' resultados
+        $consulta = empleados::where('salario', '>=', 1000)
+                               ->where('salario', '<=', 4000)
+                               ->take(2)
+                               ->get();
+
+        // Hacer consulta pero solo obtener los valores de ciertos campos
+        $consulta = empleados::select(['nombre', 'sexo', 'salario'])
+                               ->where('edad', '>=', 24)
+                               ->get();
+
+        // Hacer una consulta donde el valor de un campo contenga una subcadena indicada
+        $consulta = empleados::where('apellido', 'LIKE', '%me%')
+                               ->get();
+        
+        // Hacer una consulta donde se sumen los valores de un campo (registros donde su 'sexo' sea 'F')
+        $consulta = empleados::where('sexo', 'F')
+                               ->sum('salario');
+
+        // Consulta donde se aplica una agrupación (por sexo) y se muestra una sumatoría
+        $consulta = empleados::groupBy('sexo')
+                               ->selectRaw("sexo, sum(salario) as SalarioFinal")
+                               ->get();
+
+        // Hacer una consulta pero con una sumatoria
+        $consulta = empleados::groupBy('sexo')
+                               ->selectRaw("sexo, count(*) as CuantosHay")
+                               ->get();
+
+        // Hacer una consulta con join a otra tabla de la BD
+        // Ejemplo con sql normal
+        /*
+            $sql = "SELECT e.ide, e.nombre, d.nombre as departamento, e.edad
+                    from empleados AS e
+                    INNER JOIN departamentos AS d ON d.idd = e.idd
+                    WHERE e.edad >= 22"
+        */
+        // Implementación con Eloquent
+        $consulta = empleados::join("departamentos", "empleados.idd", "=", "departamentos.idd")
+                               ->select("empleados.ide", "empleados.nombre", "departamentos.nombre AS departamento", "empleados.edad")
+                               ->where("empleados.edad", ">=", 22)
+                               ->get();
+
+        // Contar cuantos reultados se arrojaron
+        $contador = count($consulta); // 3
+
+        return $consulta;
     }
 }
