@@ -26,7 +26,7 @@
         <p class="text-danger">{{$errors->first('ide')}}</p>
         @endif
       </label>
-      <input type="text" name="ide" id="ide" value="{{old('ide')}}" class="form-control" placeholder="Clave empleado" tabindex="1">
+      <input type="text" name="ide" id="ide" value="{{$ideSiguiente}}" readonly class="form-control" placeholder="Clave empleado" tabindex="1">
     </div>
     <div class="row">
       <div class="col-xs-6 col-sm-6 col-md-6">
@@ -102,21 +102,21 @@
           </label>
           <select name='idd' class="custom-select" value="{{old('idd')}}" tabindex="8">
             <option selected="">Selecciona un departamento</option>
-            <option value="1">Compras</option>
-            <option value="2">Ventas</option>
-            <option value="3">Producción</option>
+            @foreach($departamentos as $depa)
+              <option value="{{$depa->idd}}">{{$depa->nombre}}</option>
+            @endforeach
           </select>
         </div>
 
       </div>
     </div>
     <div class="form-group">
-      <label for="detalle">Descripción:
-        @if($errors->first('detalle'))
-          <p class="text-danger">{{$errors->first('detalle')}}</p>
+      <label for="descripcion">Descripción:
+        @if($errors->first('descripcion'))
+          <p class="text-danger">{{$errors->first('descripcion')}}</p>
         @endif
       </label>
-      <textarea name="detalle" value="{{old('detalle')}}" id="detalle" class="form-control" tabindex="9"></textarea>
+      <textarea name="descripcion" value="{{old('descripcion')}}" id="descripcion" class="form-control" tabindex="9"></textarea>
     </div>
     <div class="row my-4">
       <div class="col-xs-6 col-md-12"><input type="submit" value="Guardar" class="btn btn-danger btn-block btn-lg" tabindex="10" title="Guardar datos ingresados"></div>

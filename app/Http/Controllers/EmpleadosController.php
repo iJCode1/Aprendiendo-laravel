@@ -65,7 +65,22 @@ class EmpleadosController extends Controller
 
     // Método para las 2 vistas que usan la plantilla
     public function altaempleado(){
-        return view('altaempleado');
+        // Obteniendo el último ide para asignarlo automáticamente
+        $consulta = empleados::withTrashed()->orderBy('ide', 'DESC')->get();
+        $count = count($consulta);
+
+        if($count === 0){
+            $ideSiguiente = 1;
+        }else{
+            $ideSiguiente = $consulta[0]->ide+1;
+        }
+
+        $departamentos = departamentos::orderBy('nombre')->get();
+        return view('altaempleado')
+               ->with("ideSiguiente", $ideSiguiente)
+               ->with('departamentos', $departamentos);
+        
+        return $consulta;
     }
 
     public function guardarempleado(Request $request){
@@ -75,7 +90,7 @@ class EmpleadosController extends Controller
         // Las validaciones se hacen de izquierda a derecha
         $this->validate($request, [
             // 'ide' => 'required|numeric',
-            'ide' => 'required|regex: /^[E][M][P]-[0-9]{5}$/',
+            // 'ide' => 'required|regex: /^[E][M][P]-[0-9]{5}$/',
             'nombre' => 'required|regex: /^[A-Z][A-Z,a-z,\s, á, é, í, ó, ú, ü]+$/',
             'apellido' => 'required|regex: /^[A-Z][A-Z, a-z, \s, á, é, í, ó, ú, ü]+$/',
             // 'precio' => 'required|regex: /^[0-9]+[.][0-9]{2}$/',
@@ -84,12 +99,25 @@ class EmpleadosController extends Controller
         ]);
         // Si alguna validación manda un error, ya no se ejecuta lo demas. Se queda a la espera a que se corrija todo
         echo("Las validaciones fueron correctas! ");
-
         if($sexo === 'M'){
             echo("Bienvenido al sitio $nombre!");
         }else{
             echo("Bienvenida al sitio $nombre!");
         }
+
+        $empleados = new empleados;
+        $empleados->ide = $request->ide;
+        $empleados->nombre = $request->nombre;
+        $empleados->apellido = $request->apellido;
+        $empleados->email = $request->email;
+        $empleados->celular = $request->celular;
+        $empleados->sexo = $request->sexo;
+        $empleados->descripcion = $request->descripcion;
+        $empleados->idd = $request->idd;
+        $empleados->save();
+        return view('mensajes')
+               ->with('proceso', "Alta de empleado")
+               ->with('mensaje', "La alta de $request->nombre $request->apellido ha sido satisfactoria!");
 
         // dd($request);
         // return $request;
