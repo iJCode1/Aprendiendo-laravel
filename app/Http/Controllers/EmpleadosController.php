@@ -337,7 +337,47 @@ class EmpleadosController extends Controller
                 ->with('mensaje', "El empleado no se ha podido borrar ya que cuenta con transacciones en otras tablas")
                 ->with('error', 1);
         }
-        
-        
     }
+
+    // Modificar empleado
+    public function modificarempleado($ide){
+        $consulta = empleados::withTrashed()->join('departamentos', 'empleados.idd', '=', 'departamentos.idd')
+                               ->select('empleados.ide', 'empleados.nombre', 'empleados.apellido', 'empleados.sexo', 'empleados.celular',
+                               'departamentos.nombre as depa', 'empleados.email', 'empleados.idd', 'empleados.descripcion')
+                               ->where('ide', $ide)
+                               ->get();
+        
+        $departamentos = departamentos::all();
+
+        return view('modificarempleado')
+               ->with('empleado', $consulta[0])
+               ->with('departamentos', $departamentos);
+    }
+
+    // Guardar cambios de empleado modificado
+    public function guardarcambios(Request $request){
+
+        $this->validate($request, [
+            'nombre' => 'required|regex: /^[A-Z][A-Z,a-z,\s, á, é, í, ó, ú, ü]+$/',
+            'apellido' => 'required|regex: /^[A-Z][A-Z, a-z, \s, á, é, í, ó, ú, ü]+$/',
+            'email' => 'required|email',
+            'celular' => 'required|regex: /^[0-9]{10}$/',
+        ]);
+
+        $empleado = empleados::withTrashed()->find($request->ide);
+        $empleado->nombre = $request->nombre;
+        $empleado->apellido = $request->apellido;
+        $empleado->email = $request->email;
+        $empleado->celular = $request->celular;
+        $empleado->sexo = $request->sexo;
+        $empleado->idd = $request->idd;
+        $empleado->descripcion = $request->descripcion;
+        $empleado->save();
+
+        return view('mensajes')
+               ->with('proceso', 'Modificación de datos de empleado')
+               ->with('mensaje', "Los datos del empleado se han modificado correctamente!")
+               ->with('error', 0);
+    }
+
 }

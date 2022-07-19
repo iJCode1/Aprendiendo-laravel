@@ -50,6 +50,12 @@ Route::get('activarempleado/{ide}', [EmpleadosController::class, 'activaremplead
 // Borrar (forzado) empleados
 Route::get('borrarempleado/{ide}', [EmpleadosController::class, 'borrarempleado'])->name('borrarempleado');
 
+// Modificar empleado
+Route::get('modificarempleado/{ide}', [EmpleadosController::class, 'modificarempleado'])->name("modificarempleado");
+
+// Guardar datos de empleado modificado
+Route::post('guardarcambios', [EmpleadosController::class, 'guardarcambios'])->name('guardarcambios');
+
 /*
 // Las rutas no deberian crearse de la siguiente forma, solo llamadas a métodos de controladores
 // Ruta normal - Imprime texto
