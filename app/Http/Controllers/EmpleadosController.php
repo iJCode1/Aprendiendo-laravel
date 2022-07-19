@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\empleados;
 use App\Models\departamentos;
 use App\Models\nomina;
+use Illuminate\Support\Facades\Session;
 
 class EmpleadosController extends Controller
 {
@@ -117,10 +118,10 @@ class EmpleadosController extends Controller
         $empleados->descripcion = $request->descripcion;
         $empleados->idd = $request->idd;
         $empleados->save();
-        return view('mensajes')
-               ->with('proceso', "Alta de empleado")
-               ->with('mensaje', "La alta de $request->nombre $request->apellido ha sido satisfactoria!");
 
+        Session::flash('mensaje', "La alta de $request->nombre $request->apellido ha sido satisfactoria!");
+        Session::flash('tipoDeMensaje', "satisfactorio");
+        return redirect()->route('reporteempleados');
         // dd($request);
         // return $request;
         // return view('view2');
@@ -301,18 +302,18 @@ class EmpleadosController extends Controller
     public function desactivarempleado($ide){
         empleados::find($ide)
                    ->delete();
-        return view('mensajes')
-               ->with('proceso', "Desactivación de empleado")
-               ->with('mensaje', "El empleado ha sido desactivado correctamente")
-               ->with('error', 0);
+        
+        Session::flash('mensaje', 'El empleado ha sido desactivado correctamente');
+        Session::flash('tipoDeMensaje', "satisfactorio");
+        return redirect()->route('reporteempleados');
     }
 
     public function activarempleado($ide){
         empleados::withTrashed()->find($ide)->restore();
-        return view('mensajes')
-               ->with('proceso', "Activación de empleado")
-               ->with('mensaje', "El empleado ha sido activado correctamente")
-               ->with('error', 0);
+        
+        Session::flash('mensaje', "El empleado ha sido activado correctamente!");
+        Session::flash('tipoDeMensaje', "satisfactorio");
+        return redirect()->route('reporteempleados');
     }
 
     // Baja física
@@ -327,15 +328,14 @@ class EmpleadosController extends Controller
 
         if($cuantos === 0){ // Si no tiene transacciones
             empleados::withTrashed()->find($ide)->forceDelete();
-            return view('mensajes')
-                   ->with('proceso', "Borrado de empleado")
-                   ->with('mensaje', "El empleado ha sido borrado correctamente")
-                   ->with('error', 0);
+            
+            Session::flash('mensaje', "El empleado ha sido eliminado correctamente");
+            Session::flash('tipoDeMensaje', "satisfactorio");
+            return redirect()->route('reporteempleados');
         }else{ // Si tiene transacciones
-            return view('mensajes')
-                ->with('proceso', "Borrado de empleado")
-                ->with('mensaje', "El empleado no se ha podido borrar ya que cuenta con transacciones en otras tablas")
-                ->with('error', 1);
+            Session::flash('mensaje', "El empleado no ha sido eliminado por que cuenta con transacciones en otras tablas");
+            Session::flash('tipoDeMensaje', "error");
+            return redirect()->route('reporteempleados');
         }
     }
 
@@ -349,6 +349,7 @@ class EmpleadosController extends Controller
         
         $departamentos = departamentos::all();
 
+       
         return view('modificarempleado')
                ->with('empleado', $consulta[0])
                ->with('departamentos', $departamentos);
@@ -374,10 +375,9 @@ class EmpleadosController extends Controller
         $empleado->descripcion = $request->descripcion;
         $empleado->save();
 
-        return view('mensajes')
-               ->with('proceso', 'Modificación de datos de empleado')
-               ->with('mensaje', "Los datos del empleado se han modificado correctamente!")
-               ->with('error', 0);
+        Session::flash('mensaje', "Los datos del empleado se han modificado correctamente");
+        Session::flash('tipoDeMensaje', "satisfactorio");
+        return redirect()->route('reporteempleados');
     }
 
 }

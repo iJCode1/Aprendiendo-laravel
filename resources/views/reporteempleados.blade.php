@@ -2,6 +2,19 @@
 
 @section('content')
   <h1 class="my-5">Reporte de empleados</h1>
+
+  @if(Session::has('mensaje') && Session::has('tipoDeMensaje'))
+    @if(Session::get('tipoDeMensaje') === 'error')
+      <div class="alert alert-danger">
+        {{Session::get('mensaje')}}
+      </div>
+    @else
+      <div class="alert alert-success">
+        {{Session::get('mensaje')}}
+      </div>
+    @endif
+  @endif
+
   <a href="{{Route('altaempleado')}}">
     <button type="button" class="btn btn-success mb-3">Dar de alta empleado</button>
   </a>
