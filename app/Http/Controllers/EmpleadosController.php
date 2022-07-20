@@ -356,7 +356,7 @@ class EmpleadosController extends Controller
     public function modificarempleado($ide){
         $consulta = empleados::withTrashed()->join('departamentos', 'empleados.idd', '=', 'departamentos.idd')
                                ->select('empleados.ide', 'empleados.nombre', 'empleados.apellido', 'empleados.sexo', 'empleados.celular',
-                               'departamentos.nombre as depa', 'empleados.email', 'empleados.idd', 'empleados.descripcion')
+                               'departamentos.nombre as depa', 'empleados.email', 'empleados.idd', 'empleados.descripcion', 'empleados.img')
                                ->where('ide', $ide)
                                ->get();
         
@@ -376,7 +376,17 @@ class EmpleadosController extends Controller
             'apellido' => 'required|regex: /^[A-Z][A-Z, a-z, \s, á, é, í, ó, ú, ü]+$/',
             'email' => 'required|email',
             'celular' => 'required|regex: /^[0-9]{10}$/',
+            'img' => 'image|mimes:gif,jpeg,png'
         ]);
+
+        // Se prepara la imágen para ser almacenada dentro de la carpeta 'archivos'
+        $file = $request->file('img'); // Se obtiene la imagen
+
+        if($file!= ""){ // Si la imagen es diferente de vacio
+            $img = $file->getClientOriginalName(); // Se obtiene el nombre de la imagen
+            $img2 = time(). '-' . $img; // Se concatena el nombre de la imagen
+            \Storage::disk('local')->put($img2, \File::get($file));
+        }
 
         $empleado = empleados::withTrashed()->find($request->ide);
         $empleado->nombre = $request->nombre;
@@ -386,6 +396,9 @@ class EmpleadosController extends Controller
         $empleado->sexo = $request->sexo;
         $empleado->idd = $request->idd;
         $empleado->descripcion = $request->descripcion;
+        if($file!= ""){ // Si $file es diferente de vacio, es decir, se cambio la imagen... la actualiza en la BD
+            $empleado->img = $img2;
+        }
         $empleado->save();
 
         Session::flash('mensaje', "Los datos del empleado se han modificado correctamente");

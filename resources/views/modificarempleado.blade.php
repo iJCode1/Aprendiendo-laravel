@@ -7,7 +7,7 @@
 
 <h2 class="text-primary mt-4">Modificar datos del empleado</h2>
 
-<form action="{{Route('guardarcambios')}}" method="POST">
+<form action="{{Route('guardarcambios')}}" method="POST" enctype="multipart/form-data">
   {{csrf_field()}}
   <div class="well">
     <div class="form-group">
@@ -121,8 +121,19 @@
       </label>
       <textarea name="descripcion" id="descripcion" class="form-control" tabindex="9">{{$empleado->descripcion}}</textarea>
     </div>
+
+    <div class="form-group">
+      <label for="img">Foto de perfil:
+        <img src="{{asset('archivos/'.$empleado->img)}}" alt="Imagen del empleado" width="80">
+        @if($errors->first('img'))
+          <p class="text-danger">{{$errors->first('img')}}</p>
+        @endif
+      </label>
+      <input type="file" name="img" id="img">
+    </div>
+
     <div class="row my-4">
-      <div class="col-xs-6 col-md-12"><input type="submit" value="Guardar" class="btn btn-danger btn-block btn-lg" tabindex="10" title="Guardar datos ingresados"></div>
+      <div class="col-xs-6 col-md-12"><input type="submit" value="Guardar" class="btn btn-danger btn-block btn-lg" tabindex="11" title="Guardar datos ingresados"></div>
     </div>
   </div>
 </form>
