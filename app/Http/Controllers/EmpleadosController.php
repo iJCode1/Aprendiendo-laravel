@@ -99,7 +99,19 @@ class EmpleadosController extends Controller
             // 'precio' => 'required|regex: /^[0-9]+[.][0-9]{2}$/',
             'email' => 'required|email',
             'celular' => 'required|regex: /^[0-9]{10}$/',
+            'img' => 'image|mimes:gif,jpeg,png'
         ]);
+
+        // Se prepara la imágen para ser almacenada dentro de la carpeta 'archivos'
+        $file = $request->file('img'); // Se obtiene la imagen
+        if($file!= ""){ // Si la imagen es diferente de vacio
+            $img = $file->getClientOriginalName(); // Se obtiene el nombre de la imagen
+            $img2 = time(). '-' . $img; // Se concatena el nombre de la imagen
+            \Storage::disk('local')->put($img2, \File::get($file));
+        }else{
+            $img2 = 'sinFoto.png';
+        }
+
         // Si alguna validación manda un error, ya no se ejecuta lo demas. Se queda a la espera a que se corrija todo
         echo("Las validaciones fueron correctas! ");
         if($sexo === 'M'){
@@ -117,6 +129,7 @@ class EmpleadosController extends Controller
         $empleados->sexo = $request->sexo;
         $empleados->descripcion = $request->descripcion;
         $empleados->idd = $request->idd;
+        $empleados->img = $img2;
         $empleados->save();
 
         Session::flash('mensaje', "La alta de $request->nombre $request->apellido ha sido satisfactoria!");
@@ -289,7 +302,7 @@ class EmpleadosController extends Controller
     public function reporteempleados(){
         
         $empleados = empleados::withTrashed()->join("departamentos", "empleados.idd", "=", "departamentos.idd")
-                               ->select("empleados.ide", "empleados.nombre", "empleados.apellido", "empleados.email", "departamentos.nombre AS depa", "empleados.deleted_at AS deleted")
+                               ->select("empleados.ide", "empleados.nombre", "empleados.apellido", "empleados.email", "departamentos.nombre AS depa", "empleados.deleted_at AS deleted", "empleados.img")
                                ->orderBy("empleados.nombre")
                                ->get();
         // return $consulta;

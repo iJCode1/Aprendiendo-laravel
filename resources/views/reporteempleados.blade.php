@@ -21,6 +21,7 @@
   <table class="table">
   <thead class="thead-dark">
     <tr>
+      <th scope="col">Foto</th>
       <th scope="col">Clave</th>
       <th scope="col">Nombre Completo</th>
       <th scope="col">Correo</th>
@@ -31,6 +32,9 @@
   <tbody>
     @foreach($empleados as $empleado)
     <tr>
+      <td>
+        <img src="{{asset('archivos/'.$empleado->img)}}" alt="Imagen del cliente" width="80">
+      </td>
       <th scope="row">{{$empleado->ide}}</th>
       <td>{{$empleado->nombre}} {{$empleado->apellido}}</td>
       <td>{{$empleado->email}}</td>
