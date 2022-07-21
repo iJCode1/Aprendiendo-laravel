@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\EmpleadosController;
+use App\Http\Controllers\LoginController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -55,6 +56,15 @@ Route::get('modificarempleado/{ide}', [EmpleadosController::class, 'modificaremp
 
 // Guardar datos de empleado modificado
 Route::post('guardarcambios', [EmpleadosController::class, 'guardarcambios'])->name('guardarcambios');
+
+// Formulario de Login
+Route::get('login', [LoginController::class, 'login'])->name('login');
+
+// Validar login
+Route::post('validarLogin', [LoginController::class, 'validarLogin'])->name('validarLogin');
+
+// Vista principal (una vez logueado)
+Route::get('principal', [LoginController::class, 'principal'])->name('principal');
 
 /*
 // Las rutas no deberian crearse de la siguiente forma, solo llamadas a métodos de controladores
