@@ -56,4 +56,14 @@ class LoginController extends Controller
             return redirect()->route('login');
         }
     }
+
+    public function cerrarsesion(){
+        session::forget('sessionUsuario');
+        session::forget('sessionTipo');
+        session::forget('sessionIdu');
+        session::flush();
+
+        Session::flash('mensaje', "Cierre de sesión exitoso!");
+        return redirect()->route('login');
+    }
 }

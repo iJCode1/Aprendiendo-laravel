@@ -31,9 +31,11 @@ return [
     |
     */
 
+    // Define cuanto tiempo durará una sesión si no se utiliza el equipo (120 minutos)
     'lifetime' => env('SESSION_LIFETIME', 120),
 
-    'expire_on_close' => false,
+    // Eliminar sesiones al cerrar el navegador (true|false)
+    'expire_on_close' => true,
 
     /*
     |--------------------------------------------------------------------------

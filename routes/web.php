@@ -66,6 +66,9 @@ Route::post('validarLogin', [LoginController::class, 'validarLogin'])->name('val
 // Vista principal (una vez logueado)
 Route::get('principal', [LoginController::class, 'principal'])->name('principal');
 
+// Logout (Cerrar sesión)
+Route::get('cerrarsesion', [LoginController::class, 'cerrarsesion'])->name('cerrarsesion');
+
 /*
 // Las rutas no deberian crearse de la siguiente forma, solo llamadas a métodos de controladores
 // Ruta normal - Imprime texto
