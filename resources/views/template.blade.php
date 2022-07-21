@@ -1,3 +1,8 @@
+<?php
+  $sessionUsuario = session('sessionUsuario');
+  $sessionTipo = session('sessionTipo');
+  $sessionIdu = session('sessionIdu');
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -21,7 +26,7 @@
           <a class="nav-link" href="{{Route('reporteempleados')}}">Home</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Novedades</a>
+          <a class="nav-link" href="{{Route('reporteempleados')}}">Empleados</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="#">Contacto</a>
@@ -39,6 +44,8 @@
       </ul>
     </div>
   </nav>
+
+  <h3>Bienvenid@ <?= $sessionUsuario ?></h3>
 
   <!-- Se crea una sección donde se mostrará el contenido de cada página en particular donde se importe está plantilla -->
   <div class="container">

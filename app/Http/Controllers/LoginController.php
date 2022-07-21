@@ -32,6 +32,9 @@ class LoginController extends Controller
 
         // Se valida si es que existe un usuario en la BD y coincide con la contraseña ingresada
         if($cuantos === 1 and Hash::check($request->pasw, $consulta[0]->pasw)){
+            Session::put('sessionUsuario', $consulta[0]->nombre .' '. $consulta[0]->apellido);
+            Session::put('sessionTipo', $consulta[0]->tipo);
+            Session::put('sessionIdu', $consulta[0]->idu);
             return redirect()->route('principal');
         }else{
             Session::flash("mensaje", "El usuario o contraseña no son validos");
@@ -40,6 +43,17 @@ class LoginController extends Controller
     }
 
     public function principal(){
-        return view('template');
+        // Se obtiene el valor de una sesión (nombre)
+        // Si no existe, este retornara un vacio ""
+        $sessionIdu = Session('sessionIdu');
+        // Se hace la validación si esa sesión tiene un valor
+        if($sessionIdu != ""){
+            return view('template');
+        }else{
+            // Significa que no hay una sesión creada por lo que no ha ingresado con sus credenciales
+            // Se le redirige a la ruta de 'login'
+            Session::flash('mensaje', "Debe iniciar sesión primero");
+            return redirect()->route('login');
+        }
     }
 }

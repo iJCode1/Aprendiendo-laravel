@@ -67,23 +67,34 @@ class EmpleadosController extends Controller
 
     // Método para las 2 vistas que usan la plantilla
     public function altaempleado(){
-        // Obteniendo el último ide para asignarlo automáticamente
-        $consulta = empleados::withTrashed()->orderBy('ide', 'DESC')->get();
-        $count = count($consulta);
-
-        if($count === 0){
-            $ideSiguiente = 1;
+        // Se obtiene el valor de una sesión (nombre)
+        // Si no existe, este retornara un vacio ""
+        $sessionIdu = session('sessionIdu');
+        // Se hace la validación si esa sesión tiene un valor
+        if($sessionIdu != ""){
+            // Obteniendo el último ide para asignarlo automáticamente
+            $consulta = empleados::withTrashed()->orderBy('ide', 'DESC')->get();
+            $count = count($consulta);
+    
+            if($count === 0){
+                $ideSiguiente = 1;
+            }else{
+                $ideSiguiente = $consulta[0]->ide+1;
+            }
+    
+            $departamentos = departamentos::orderBy('nombre')->get();
+            return view('altaempleado')
+                   ->with("ideSiguiente", $ideSiguiente)
+                   ->with('departamentos', $departamentos)
+                   ->with('error', 0);
+            
+            return $consulta;
         }else{
-            $ideSiguiente = $consulta[0]->ide+1;
+            // Significa que no hay una sesión creada por lo que no ha ingresado con sus credenciales
+            // Se le redirige a la ruta de 'login'
+            Session::flash('mensaje', "Debe iniciar sesión primero");
+            return redirect()->route('login');
         }
-
-        $departamentos = departamentos::orderBy('nombre')->get();
-        return view('altaempleado')
-               ->with("ideSiguiente", $ideSiguiente)
-               ->with('departamentos', $departamentos)
-               ->with('error', 0);
-        
-        return $consulta;
     }
 
     public function guardarempleado(Request $request){
@@ -300,15 +311,28 @@ class EmpleadosController extends Controller
     }
 
     public function reporteempleados(){
-        
-        $empleados = empleados::withTrashed()->join("departamentos", "empleados.idd", "=", "departamentos.idd")
-                               ->select("empleados.ide", "empleados.nombre", "empleados.apellido", "empleados.email", "departamentos.nombre AS depa", "empleados.deleted_at AS deleted", "empleados.img")
-                               ->orderBy("empleados.nombre")
-                               ->get();
-        // return $consulta;
-        return view('reporteempleados')
-               ->with("empleados", $empleados)
-               ->with('error', 0);
+        // Se obtiene el valor de una sesión (nombre)
+        // Si no existe, este retornara un vacio ""
+        $sessionIdu = session('sessionIdu');
+        $sessionTipo = session('sessionTipo');
+        // Se hace la validación si esa sesión tiene un valor
+        if($sessionIdu != ""){
+            // Si existe un usario logueado
+            $empleados = empleados::withTrashed()->join("departamentos", "empleados.idd", "=", "departamentos.idd")
+                                ->select("empleados.ide", "empleados.nombre", "empleados.apellido", "empleados.email", "departamentos.nombre AS depa", "empleados.deleted_at AS deleted", "empleados.img")
+                                ->orderBy("empleados.nombre")
+                                ->get();
+            // return $consulta;
+            return view('reporteempleados')
+                ->with("empleados", $empleados)
+                ->with('error', 0)
+                ->with('sessionTipo', $sessionTipo);
+        }else{
+            // Significa que no hay una sesión creada por lo que no ha ingresado con sus credenciales
+            // Se le redirige a la ruta de 'login'
+            Session::flash('mensaje', "Debe iniciar sesión primero");
+            return redirect()->route('login');
+        }
     }
 
     // Baja lógica
@@ -354,18 +378,28 @@ class EmpleadosController extends Controller
 
     // Modificar empleado
     public function modificarempleado($ide){
-        $consulta = empleados::withTrashed()->join('departamentos', 'empleados.idd', '=', 'departamentos.idd')
-                               ->select('empleados.ide', 'empleados.nombre', 'empleados.apellido', 'empleados.sexo', 'empleados.celular',
-                               'departamentos.nombre as depa', 'empleados.email', 'empleados.idd', 'empleados.descripcion', 'empleados.img')
-                               ->where('ide', $ide)
-                               ->get();
-        
-        $departamentos = departamentos::all();
-
-       
-        return view('modificarempleado')
-               ->with('empleado', $consulta[0])
-               ->with('departamentos', $departamentos);
+        // Se obtiene el valor de una sesión (nombre)
+        // Si no existe, este retornara un vacio ""
+        $sessionIdu = session('sessionIdu');
+        // Se hace la validación si esa sesión tiene un valor
+        if($sessionIdu != ""){
+            $consulta = empleados::withTrashed()->join('departamentos', 'empleados.idd', '=', 'departamentos.idd')
+                                   ->select('empleados.ide', 'empleados.nombre', 'empleados.apellido', 'empleados.sexo', 'empleados.celular',
+                                   'departamentos.nombre as depa', 'empleados.email', 'empleados.idd', 'empleados.descripcion', 'empleados.img')
+                                   ->where('ide', $ide)
+                                   ->get();
+            
+            $departamentos = departamentos::all();
+    
+            return view('modificarempleado')
+                   ->with('empleado', $consulta[0])
+                   ->with('departamentos', $departamentos);
+        }else{
+            // Significa que no hay una sesión creada por lo que no ha ingresado con sus credenciales
+            // Se le redirige a la ruta de 'login'
+            Session::flash('mensaje', "Debe iniciar sesión primero");
+            return redirect()->route('login');
+        }
     }
 
     // Guardar cambios de empleado modificado
